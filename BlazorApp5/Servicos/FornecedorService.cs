@@ -60,7 +60,6 @@ namespace BlazorApp5.Servicos
             }
             catch (Exception)
             {
-
                 return false;
             }
         }
@@ -78,7 +77,8 @@ namespace BlazorApp5.Servicos
             {
                 return false;
             }
-
         }
+
+
     }
 }

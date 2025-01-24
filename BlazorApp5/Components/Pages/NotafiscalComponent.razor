@@ -1,4 +1,6 @@
-﻿@page "/notafiscal"
+﻿@page "/notafiscal/{idNota}"
+@page "/notafiscal"
+
 @rendermode InteractiveServer
 
 @inject INFService notaServices
@@ -47,7 +49,8 @@
         <div class="row">
             <div class="col-sm">
                 <label for="exampleFormControlTextarea1" class="form-label">Fornecedor</label>
-                <InputSelect class="custom-select form-select" @bind-Value="@notaFiscal.FornecedorId" >
+                <InputSelect class="custom-select form-select" @bind-Value="@notaFiscal.FornecedorId" @bind-Value:after="@SelectFornecedor">
+                    <option>Selecione um Fornecedor</option>
                     @foreach (var item in listaFornecedores)
                     {
                         <option value="@item.Id">@item.RasaoSocial</option>
@@ -56,12 +59,13 @@
             </div>
             <div class="col-sm">
                 <label for="exampleFormControlTextarea1" class="form-label">Cliente</label>
-                <select class="custom-select form-select" @bind="notaFiscal.ClienteId" >
+                <InputSelect class="form-select custom-select" @bind-Value="@notaFiscal.ClienteId" @bind-Value:after="@SelectCliente">
+                    <option>Selecione um Cliente</option>
                     @foreach (var item in listaClientes)
                     {
                         <option value="@item.Id">@item.RasaoSocial</option>
                     }
-                </select>
+                </InputSelect>
             </div>
         </div>
         <div class="row">
@@ -105,18 +109,19 @@
     [Inject]
     public IFornecedorService fornecedorService2 { get; set; }
 
+    [Parameter]
+    public string idNota { get; set; } = null;
+
+    [Parameter]
+    public NotaFiscal? notaFiscal { get; set; } = null;
+
     public List<Fornecedor> listaFornecedores { get; set; } = new List<Fornecedor>();
+
     public List<Cliente> listaClientes { get; set; } = new();
 
     private DateTime? _date = DateTime.Today;
 
-    [Parameter]
-    public string Id { get; set; } = string.Empty;
-
     public string? MensagemError { get; set; } = null;
-
-    private NotaFiscal? notaFiscal;
-
 
     protected override async Task OnParametersSetAsync()
     {
@@ -131,20 +136,29 @@
         }
         catch (Exception)
         {
-
         }
+    }
+
+    public void SelectCliente()
+    {
+        Guid guid = this.notaFiscal.ClienteId;
+        notaFiscal.NomeCliente = listaClientes.FirstOrDefault(a => a.Id == guid).RasaoSocial;
+    }
+
+    public void SelectFornecedor()
+    {
+        Guid guid = this.notaFiscal.FornecedorId;
+        notaFiscal.NomeFornecedor = listaFornecedores.FirstOrDefault(a => a.Id == guid).RasaoSocial;
     }
 
     protected override async Task OnInitializedAsync()
     {
-
         IniciaNotaFiscal();
-
-        if (Id != string.Empty)
+        if (idNota != null)
         {
             try
             {
-                notaFiscal = await notaServices.GetNotaFiscalById(Guid.Parse(Id));
+                notaFiscal = await notaServices.GetNotaFiscalById(Guid.Parse(idNota));
             }
             catch (Exception ex)
             {
@@ -156,37 +170,44 @@
     private void IniciaNotaFiscal()
     {
         notaFiscal = new NotaFiscal();
-        notaFiscal.DataEmissao = DateTime.Now;
-        notaFiscal.Numero = 1;
+        notaFiscal.DataEmissao = DateTime.Today;
         notaFiscal.CodigoValidacao =  Guid.NewGuid().ToString().Substring(0,8);
         notaFiscal.NumeroNF = DateTime.Today.Year.ToString() +  notaFiscal.Numero.ToString("D8");
-        notaFiscal.AliquotaIss = decimal.Parse("2.50", System.Globalization.CultureInfo.InvariantCulture);
-        notaFiscal.DataEmissao = DateTime.Today;
+        notaFiscal.AliquotaIss = decimal.Parse("2", System.Globalization.CultureInfo.InvariantCulture);
+        notaFiscal.DataExercicio = DateTime.Now;
     }
 
     public async Task Salvar()
     {
-        if (this.Id != string.Empty)
+        Guid guidOK = new Guid();
+        if (idNota == null)
+        {
+            idNota = guidOK.ToString();
+        }
+
+        var listaNotas = await notaServices.GetNotasFicasis();
+        var nota = listaNotas.FirstOrDefault(a => a.Id == Guid.Parse(idNota));
+
+        if (nota == null)
         {
             bool result = await notaServices.AddNF(notaFiscal);
             if (result)
             {
-                await jsRuntime.InvokeVoidAsync("alert", "Registro salvo");
+                await jsRuntime.InvokeVoidAsync("alert", "Nota salva com sucesso!");
             }
         }
         else
         {
-            var result = await notaServices.UpdateNF(notaFiscal);
+            var result = await notaServices.UpdateNF(Guid.Parse(idNota), notaFiscal);
             if (result is not null)
             {
-                await jsRuntime.InvokeVoidAsync("alert", "Registro salvo");
+                await jsRuntime.InvokeVoidAsync("alert", "Nota salva com sucesso!");
             }
         }
-
     }
 
     private void Limpa()
-    { 
+    {
+        
     }
-
 }
