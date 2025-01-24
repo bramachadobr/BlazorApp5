@@ -1,0 +1,174 @@
+﻿@page "/cliente"
+
+@rendermode InteractiveServer
+
+@inject IClienteService clienteService
+@inject NavigationManager navigate
+@inject IJSRuntime jsRuntime
+
+<PageTitle>Cliente</PageTitle>
+
+<h1>Cliente</h1>
+
+
+<div class="container">
+
+    <div class="row">
+        @if (MensagemError is not null)
+        {
+            <ExibeErroComponent MensagemErro=@MensagemError />
+        }
+    </div>
+
+    <EditForm FormName="formFornecedor" Model="@currentCliente" OnValidSubmit="Salvar">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="row">
+            <div class="col-sm">
+                <label class="form-label" for="rasaoSocial">Razão Social</label>
+                <input class="form-control" type="text" id="rasaoSocial" @bind-value="@currentCliente.RasaoSocial" placeholder="Razão Social" />
+            </div>
+            <div class="col-sm">
+                <label class="form-label" for="nomeFantasia">Nome Fantasia</label>
+                <input class="form-control" type="text" id="nomeFantasia" @bind-value="@currentCliente.NomeFantasia" placeholder="Nome Fantasia" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm">
+                <label class="form-label" for="cnpjCpf">CNPJ / CPF</label>
+                <input class="form-control" type="text" id="cnpjCpf" @bind-value="@currentCliente.CNPJ_CPF" placeholder="CNPJ / CPF" />
+            </div>
+            <div class="col-sm">
+                <label class="form-label" for="inscEstadual">Inscrição Estadual</label>
+                <input class="form-control" type="text" id="inscEstadual" @bind-value="@currentCliente.Inscricao_estadual" placeholder="Inscrição Estadual" />
+            </div>
+            <div class="col-sm">
+                <label class="form-label">Iscrição Municipal</label>
+                <input class="form-control" type="text" id="inscMunicipal" @bind-value="@currentCliente.Inscricao_Municipal" placeholder="Iscrição Municipal" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm">
+                <label class="form-label">Endereço</label>
+                <input class="form-control" type="text" id="endereco" @bind-value="@currentCliente.Endereco" placeholder="Endereço" />
+            </div>
+            <div class="col-sm">
+                <label class="form-label">Bairro</label>
+                <input class="form-control" type="text" id="bairro" @bind-value="@currentCliente.Bairro" placeholder="Bairro" />
+            </div>
+            <div class="col-sm">
+                <label class="form-label">Número</label>
+                <input class="form-control" type="text" id="numero" @bind-value="@currentCliente.Numero" placeholder="Número" />
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                <label class="form-label">CEP</label>
+                <input class="form-control" type="text" id="cep" @bind-value="@currentCliente.CEP" placeholder="CEP" />
+            </div>
+            <div class="col-sm">
+                <label class="form-label">Cidade</label>
+                <input class="form-control" type="text" id="cidade" @bind-value="@currentCliente.Cidade" placeholder="Cidade" />
+            </div>
+            <div class="col-sm">
+                <label class="form-label">UF</label>
+                <input class="form-control" type="text" id="uf" @bind-value="@currentCliente.Estado" placeholder="UF" />
+            </div>
+            <div class="col-sm">
+                <label class="form-label">E-Mail</label>
+                <input class="form-control" type="text" id="email" @bind-value="@currentCliente.Email" placeholder="E-Mail" />
+            </div>
+            <div class="col-sm">
+                <label class="form-label">Telefone</label>
+                <input class="form-control" type="text" id="telefone" @bind-value="@currentCliente.Telefone" placeholder="Telefone" />
+            </div>
+        </div>
+
+        <div class="row mt-4"></div>
+
+        <div class="row justify-content-lg-start">
+            <div class="col-3">
+                <button type="submit" class="btn btn-primary">Salvar</button>
+            </div>
+            <div class="col-3">
+                <button @onclick="Cancelar" type="button" class="btn btn-secondary">Cancelar</button>
+            </div>
+        </div>
+
+    </EditForm>
+
+</div>
+
+@code
+{
+
+    [Parameter]
+    public string IdCliente { get; set; } = null;
+
+    [Parameter]
+    public Cliente? currentCliente { get; set; } = null;
+
+    public string? MensagemError { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (IdCliente != null)
+        {
+            this.currentCliente = await clienteService.Get(Guid.Parse(IdCliente));
+        }
+        else
+        {
+            if (currentCliente == null)
+            {
+                currentCliente = new();
+            }
+        }
+    }
+
+    protected void Cancelar()
+    {
+        try
+        {
+            navigate.NavigateTo("/fornecedorlist");
+        }
+        catch (Exception)
+        {
+            jsRuntime.InvokeVoidAsync("console.log", "erro");
+        }
+
+    }
+
+    protected async Task Salvar()
+    {
+        Guid idOK = new Guid();
+        if (IdCliente == null)
+        {
+            IdCliente = idOK.ToString();
+        }
+
+        var lista = await clienteService.GetAllCliente();
+        var fornecedor = lista.FirstOrDefault<Cliente>(x => x.Id == Guid.Parse(IdCliente));
+        if (fornecedor is null)
+        {
+            var result = await clienteService.Add(currentCliente);
+            if (result)
+            {
+                await jsRuntime.InvokeVoidAsync("alert", "Cliente salvo com sucesso!");
+                navigate.NavigateTo("/clientelist");
+            }
+        }
+        else
+        {
+            var result = await clienteService.Update(currentCliente.Id, currentCliente);
+            if (result != null)
+            {
+                await jsRuntime.InvokeVoidAsync("alert", "Cliente salvo com sucesso!");
+                navigate.NavigateTo("/clientelist");
+            }
+        }
+    }
+}

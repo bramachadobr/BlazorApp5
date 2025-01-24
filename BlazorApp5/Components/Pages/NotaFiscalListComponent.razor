@@ -1,0 +1,111 @@
+﻿@page "/fornecedorlist"
+
+@rendermode InteractiveServer
+@inject IFornecedorService fornecedorServices
+@inject NavigationManager Navigation
+@inject IJSRuntime jsrunTime
+
+<PageTitle>Weather</PageTitle>
+
+<h1>Lista de Fornecedor</h1>
+
+@if (listaFornecedores is null)
+{
+    <p><em>Carregando...</em></p>
+}
+else
+{
+
+    <div class="container ">
+
+        <div class="row mb-2">
+            <div class="col-12" style="text-align:right;">
+                <button class="btn btn-lg btn-primary" @onclick="@(()=>Navigation.NavigateTo("/fornecedor"))"><i class="bi bi-plus-circle-fill"></i> Novo</button>
+            </div>
+        </div>
+
+        <div class="form-control">
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Razão Social</th>
+                        <th>Nome Fantasia</th>
+                        <th>CNPJ/CPF</th>
+                        <th>E-mail</th>
+                        <th>Telefone</th>
+                        <th>Editar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var forneced in listaFornecedores)
+                    {
+                        <tr>
+                            <td>@forneced.RasaoSocial</td>
+                            <td>@forneced.NomeFantasia</td>
+                            <td>@forneced.CNPJ_CPF</td>
+                            <td>@forneced.Email</td>
+                            <td>@forneced.Telefone</td>
+                            <td>
+                                <button id="edit" class="btn btn-sm btn-primary" @onclick="()=>EditItem(forneced.Id)"><i class="bi bi-pencil-fill"></i></button>
+                                <button id="delete" class="btn btn-sm btn-danger" @onclick="()=> ShowConfirmationAsync(forneced.Id)"><i class="bi bi-trash3-fill"></i></button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <ConfirmDialog @ref="dialog" />
+
+}
+
+@code 
+{
+    private ConfirmDialog dialog = default!;
+
+    private async Task ShowConfirmationAsync(Guid id)
+    {
+        var confirmation = await dialog.ShowAsync(
+            title: "Voce realmente deseja apagar isto ?",
+            message1: "Ao apagar esse registro, ele nao podera ser recuperado.",
+            message2: "Deseja Apagar?");
+
+        if (confirmation)
+        {
+            await fornecedorServices.Delete(id);
+        }
+    }
+
+    private IEnumerable<Fornecedor>? listaFornecedores = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // try
+        // {
+        //     this.listaFornecedores = await fornecedorServices.GetAllFornecedor();
+        // }
+        // catch (Exception ex)
+        // {
+        //     throw ex;
+        // }
+        if (listaFornecedores == null)
+        {
+            this.listaFornecedores = await fornecedorServices.GetAllFornecedor();
+        }
+
+    }
+
+    public async Task ApagarItem(Guid id)
+    {
+        Fornecedor f = await fornecedorServices.Get(id);
+        await fornecedorServices.Delete(f.Id);
+    }
+
+    public void EditItem(Guid id)
+    {
+        Navigation.NavigateTo($"/fornecedor/{id.ToString()}", true);
+    }
+
+}

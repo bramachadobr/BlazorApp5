@@ -1,0 +1,112 @@
+﻿@page "/clientelist"
+
+@rendermode InteractiveServer
+@inject IClienteService clienteService
+@inject NavigationManager Navigation
+@inject IJSRuntime jsrunTime
+
+
+<PageTitle>Clientes</PageTitle>
+
+<h1>Lista de Clientes</h1>
+
+@if (listaCliente is null)
+{
+    <p><em>Carregando...</em></p>
+}
+else
+{
+
+    <div class="container ">
+
+        <div class="row mb-2">
+            <div class="col-12" style="text-align:right;">
+                <button class="btn btn-lg btn-primary" @onclick="@(()=>Navigation.NavigateTo("/fornecedor"))"><i class="bi bi-plus-circle-fill"></i> Novo</button>
+            </div>
+        </div>
+
+        <div class="form-control">
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Razão Social</th>
+                        <th>Nome Fantasia</th>
+                        <th>CNPJ/CPF</th>
+                        <th>E-mail</th>
+                        <th>Telefone</th>
+                        <th>Editar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var cliente in listaCliente)
+                    {
+                        <tr>
+                            <td>@cliente.RasaoSocial</td>
+                            <td>@cliente.NomeFantasia</td>
+                            <td>@cliente.CNPJ_CPF</td>
+                            <td>@cliente.Email</td>
+                            <td>@cliente.Telefone</td>
+                            <td>
+                                <button id="edit" class="btn btn-sm btn-primary" @onclick="()=>EditItem(cliente.Id)"><i class="bi bi-pencil-fill"></i></button>
+                                <button id="delete" class="btn btn-sm btn-danger" @onclick="()=> ShowConfirmationAsync(cliente.Id)"><i class="bi bi-trash3-fill"></i></button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <ConfirmDialog @ref="dialog" />
+
+}
+
+@code 
+{
+    private ConfirmDialog dialog = default!;
+
+    private async Task ShowConfirmationAsync(Guid id)
+    {
+        var confirmation = await dialog.ShowAsync(
+            title: "Voce realmente deseja apagar isto ?",
+            message1: "Ao apagar esse registro, ele nao podera ser recuperado.",
+            message2: "Deseja Apagar?");
+
+        if (confirmation)
+        {
+            await clienteService.Delete(id);
+        }
+    }
+
+    private IEnumerable<Cliente>? listaCliente = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // try
+        // {
+        //     this.listaFornecedores = await fornecedorServices.GetAllFornecedor();
+        // }
+        // catch (Exception ex)
+        // {
+        //     throw ex;
+        // }
+        if (listaCliente == null)
+        {
+            this.listaCliente = await clienteService.GetAllCliente();
+        }
+
+    }
+
+    public async Task ApagarItem(Guid id)
+    {
+        Cliente f = await clienteService.Get(id);
+        await clienteService.Delete(f.Id);
+    }
+
+    public void EditItem(Guid id)
+    {
+        Navigation.NavigateTo($"/cliente/{id.ToString()}", true);
+    }
+
+}

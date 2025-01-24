@@ -1,0 +1,175 @@
+﻿@page "/fornecedor/{idFornecedor}"
+@page "/fornecedor"
+
+@rendermode InteractiveServer
+
+@inject IFornecedorService fornecedorService
+@inject NavigationManager navigate
+@inject IJSRuntime jsRuntime
+
+<PageTitle>Fornecedor</PageTitle>
+
+<h1>Fornecedor</h1>
+
+<div class="container">
+
+    <div class="row">
+        @if (MensagemError is not null)
+        {
+            <ExibeErroComponent MensagemErro=@MensagemError />
+        }
+    </div>
+
+    <EditForm FormName="formFornecedor" Model="@currentFornecedor" OnValidSubmit="Salvar">
+        <DataAnnotationsValidator />
+        <ValidationSummary/>
+
+        <div class="row">
+            <div class="col-sm">
+                <label class="form-label" for="rasaoSocial">Razão Social</label>
+                <input class="form-control" type="text" id="rasaoSocial" @bind-value="@currentFornecedor.RasaoSocial" placeholder="Razão Social" />
+            </div>
+            <div class="col-sm">
+                <label class="form-label" for="nomeFantasia">Nome Fantasia</label>
+                <input class="form-control" type="text" id="nomeFantasia" @bind-value="@currentFornecedor.NomeFantasia" placeholder="Nome Fantasia" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm">
+                <label class="form-label" for="cnpjCpf">CNPJ / CPF</label>
+                <input class="form-control" type="text" id="cnpjCpf" @bind-value="@currentFornecedor.CNPJ_CPF" placeholder="CNPJ / CPF" />
+            </div>
+            <div class="col-sm">
+                <label class="form-label" for="inscEstadual">Inscrição Estadual</label>
+                <input class="form-control" type="text" id="inscEstadual" @bind-value="@currentFornecedor.Inscricao_estadual" placeholder="Inscrição Estadual" />
+            </div>
+            <div class="col-sm">
+                <label class="form-label">Iscrição Municipal</label>
+                <input class="form-control" type="text" id="inscMunicipal" @bind-value="@currentFornecedor.Inscricao_Municipal" placeholder="Iscrição Municipal" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm">
+                <label class="form-label">Endereço</label>
+                <input class="form-control" type="text" id="endereco" @bind-value="@currentFornecedor.Endereco" placeholder="Endereço" />
+            </div>
+            <div class="col-sm">
+                <label class="form-label">Bairro</label>
+                <input class="form-control" type="text" id="bairro" @bind-value="@currentFornecedor.Bairro" placeholder="Bairro" />
+            </div>
+            <div class="col-sm">
+                <label class="form-label">Número</label>
+                <input class="form-control" type="text" id="numero" @bind-value="@currentFornecedor.Numero" placeholder="Número" />
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                <label class="form-label">CEP</label>
+                <input class="form-control" type="text" id="cep" @bind-value="@currentFornecedor.CEP" placeholder="CEP" />
+            </div>
+            <div class="col-sm">
+                <label class="form-label">Cidade</label>
+                <input class="form-control" type="text" id="cidade" @bind-value="@currentFornecedor.Cidade" placeholder="Cidade" />
+            </div>
+            <div class="col-sm">
+                <label class="form-label">UF</label>
+                <input class="form-control" type="text" id="uf" @bind-value="@currentFornecedor.Estado" placeholder="UF" />
+            </div>
+            <div class="col-sm">
+                <label class="form-label">E-Mail</label>
+                <input class="form-control" type="text" id="email" @bind-value="@currentFornecedor.Email" placeholder="E-Mail" />
+            </div>
+            <div class="col-sm">
+                <label class="form-label">Telefone</label>
+                <input class="form-control" type="text" id="telefone" @bind-value="@currentFornecedor.Telefone" placeholder="Telefone" />
+            </div>
+        </div>
+
+        <div class="row mt-4"></div>
+
+        <div class="row justify-content-lg-start">
+            <div class="col-3">
+                <button type="submit" class="btn btn-primary">Salvar</button>
+            </div>
+            <div class="col-3">
+                <button @onclick="Cancelar" type="button" class="btn btn-secondary">Cancelar</button>
+            </div>
+        </div>
+
+    </EditForm>    
+
+</div>
+
+
+@code
+{
+
+    [Parameter]
+    public string idFornecedor { get; set; } = null;
+
+    [Parameter]
+    public Fornecedor? currentFornecedor { get; set; } = null;
+
+    public string? MensagemError { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (idFornecedor != null)
+        {
+            this.currentFornecedor = await fornecedorService.Get(Guid.Parse(idFornecedor));
+        }
+        else
+        {
+            if (idFornecedor == null)
+            {
+                currentFornecedor = new();
+            }
+        }
+    }
+
+    protected void Cancelar()
+    {
+        try
+        {
+            navigate.NavigateTo("/fornecedorlist");
+        }
+        catch (Exception)
+        {
+            jsRuntime.InvokeVoidAsync("console.log", "erro");
+        }
+
+    }
+
+    protected async Task Salvar()
+    {
+        Guid idOK = new Guid();
+        if (idFornecedor == null)
+        {
+            idFornecedor = idOK.ToString();
+        }
+
+        var lista = await fornecedorService.GetAllFornecedor();
+        var fornecedor = lista.FirstOrDefault<Fornecedor>(x => x.Id == Guid.Parse(idFornecedor));
+        if (fornecedor is null)
+        {
+            var result = await fornecedorService.Add(currentFornecedor);
+            if (result)
+            {
+                await jsRuntime.InvokeVoidAsync("alert", "Fornecedor salvo com sucesso!");
+                navigate.NavigateTo("/fornecedorlist");
+            }
+        }
+        else
+        {
+            var result = await fornecedorService.Update(currentFornecedor.Id, currentFornecedor);
+            if (result != null)
+            {
+                await jsRuntime.InvokeVoidAsync("alert", "Fornecedor salvo com sucesso!");
+                navigate.NavigateTo("/fornecedorlist");
+            }
+        }
+    }
+}

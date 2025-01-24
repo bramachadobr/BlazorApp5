@@ -1,0 +1,192 @@
+﻿@page "/notafiscal"
+@rendermode InteractiveServer
+
+@inject INFService notaServices
+@inject IJSRuntime jsRuntime
+@inject IClienteService clienteService
+@inject IFornecedorService fornecedorService
+
+<PageTitle>Nota Fiscal</PageTitle>
+
+<h1>Emissão de NF</h1>
+
+@* <p role="status">Current count: @currentCount</p>
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button> *@
+
+
+<div class="container">
+    <div class="row">
+        @if (MensagemError is not null)
+        {
+            <ExibeErroComponent MensagemErro=@MensagemError />
+        }
+    </div>
+
+    <EditForm Model="notaFiscal" OnValidSubmit="Salvar">
+        <DataAnnotationsValidator/>
+        <ValidationSummary/>
+        <div class="row">
+            <div class="col-sm">
+                <label for="startDate" class="form-label">Data da Emissão</label>
+                <input id="startDate" class="form-control" type="datetime-local" @bind-value="@notaFiscal.DataEmissao" format-value="dd/MM/yyyy hh:mm:ss" placeholder="Data Emissão" aria-label="Data da emissão" />
+            </div>
+            <div class="col-sm">
+                <label for="numeroDaNota" class="form-label">Número da Nota</label>
+                <input id="numeroDaNota" class="form-control" type="text" @bind-value="@notaFiscal.NumeroNF" placeholder="Número da Nota" aria-label="Número da NF" />
+            </div>
+            <div class="col-sm">
+                <label for="codigoValidacao" class="form-label">Código de Válidação</label>
+                <input type="text" class="form-control" id="codigoValidacao" @bind-value="@notaFiscal.CodigoValidacao" placeholder="Código de válidação">
+            </div>
+            <div class="col-sm">
+                <label for="dataExercicio" class="form-label">Data exercício</label>
+                <input type="date" class="form-control" id="dataExercicio" @bind-value="@notaFiscal.DataExercicio" placeholder="Data/Mês do exercício">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm">
+                <label for="exampleFormControlTextarea1" class="form-label">Fornecedor</label>
+                <InputSelect class="custom-select form-select" @bind-Value="@notaFiscal.FornecedorId" >
+                    @foreach (var item in listaFornecedores)
+                    {
+                        <option value="@item.Id">@item.RasaoSocial</option>
+                    }
+                </InputSelect>
+            </div>
+            <div class="col-sm">
+                <label for="exampleFormControlTextarea1" class="form-label">Cliente</label>
+                <select class="custom-select form-select" @bind="notaFiscal.ClienteId" >
+                    @foreach (var item in listaClientes)
+                    {
+                        <option value="@item.Id">@item.RasaoSocial</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                <label for="exampleFormControlTextarea1" class="form-label">Descrição dos Serviços</label>
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" @bind="@notaFiscal.DescricaoDoServico" ></textarea>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm">
+                <label for="valorNota" class="form-label">R$ Valor Total da NF</label>
+                <input id="valorNota" class="form-control" type="number" @bind-value="@notaFiscal.ValorTotal" placeholder="Valor Total" aria-label="Valor Total" />
+            </div>
+            <div class="col-sm">
+                <label for="aliquotaIss" class="form-label">% ISS</label>
+                <input id="aliquotaIss" class="form-control" type="number" @bind-value="@notaFiscal.AliquotaIss" placeholder="% ISS" aria-label="Aliquota ISS" />
+            </div>
+            <div class="col-sm">
+                <label for="valorIss" class="form-label">R$ ISS</label>
+                <input id="valorIss" class="form-control" type="number" @bind-value="@notaFiscal.ValorIss" placeholder="Valor ISS" aria-label="Valor ISS" />
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-3">
+                <button class="btn btn-primary" type="submit">Salvar</button>
+            </div>
+            <div class="col-3">
+                <button class="btn btn-secondary" type="button">Limpar</button>
+            </div>
+        </div>
+
+    </EditForm>
+
+</div>
+
+
+@code 
+{
+    [Inject]
+    public IFornecedorService fornecedorService2 { get; set; }
+
+    public List<Fornecedor> listaFornecedores { get; set; } = new List<Fornecedor>();
+    public List<Cliente> listaClientes { get; set; } = new();
+
+    private DateTime? _date = DateTime.Today;
+
+    [Parameter]
+    public string Id { get; set; } = string.Empty;
+
+    public string? MensagemError { get; set; } = null;
+
+    private NotaFiscal? notaFiscal;
+
+
+    protected override async Task OnParametersSetAsync()
+    {
+        try
+        {
+            var fornecedore = await fornecedorService2.GetAllFornecedor();
+            var clientes = await clienteService.GetAllCliente();
+            listaFornecedores = fornecedore.ToList();
+            listaClientes = clientes.ToList();
+            // var clientes = await clienteService.GetAllCliente();
+            // listaClientes = clientes.ToList();
+        }
+        catch (Exception)
+        {
+
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        IniciaNotaFiscal();
+
+        if (Id != string.Empty)
+        {
+            try
+            {
+                notaFiscal = await notaServices.GetNotaFiscalById(Guid.Parse(Id));
+            }
+            catch (Exception ex)
+            {
+                await jsRuntime.InvokeVoidAsync("console.log", "ERRO " + ex.Message);
+            }
+        }
+    }
+
+    private void IniciaNotaFiscal()
+    {
+        notaFiscal = new NotaFiscal();
+        notaFiscal.DataEmissao = DateTime.Now;
+        notaFiscal.Numero = 1;
+        notaFiscal.CodigoValidacao =  Guid.NewGuid().ToString().Substring(0,8);
+        notaFiscal.NumeroNF = DateTime.Today.Year.ToString() +  notaFiscal.Numero.ToString("D8");
+        notaFiscal.AliquotaIss = decimal.Parse("2.50", System.Globalization.CultureInfo.InvariantCulture);
+        notaFiscal.DataEmissao = DateTime.Today;
+    }
+
+    public async Task Salvar()
+    {
+        if (this.Id != string.Empty)
+        {
+            bool result = await notaServices.AddNF(notaFiscal);
+            if (result)
+            {
+                await jsRuntime.InvokeVoidAsync("alert", "Registro salvo");
+            }
+        }
+        else
+        {
+            var result = await notaServices.UpdateNF(notaFiscal);
+            if (result is not null)
+            {
+                await jsRuntime.InvokeVoidAsync("alert", "Registro salvo");
+            }
+        }
+
+    }
+
+    private void Limpa()
+    { 
+    }
+
+}
