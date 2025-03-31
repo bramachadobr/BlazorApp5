@@ -1,6 +1,7 @@
 ﻿using BlazorApp5.Classes;
 using BootstrapBlazor.Components;
 using Microsoft.EntityFrameworkCore;
+using QRCoder;
 
 namespace BlazorApp5.Servicos
 {
@@ -15,6 +16,7 @@ namespace BlazorApp5.Servicos
         {
             try
             {
+                nf.QrCodeImage = GerarQRCode(nf.urlQrCode);
                 context.NotaFiscals.Add(nf);
                 context.SaveChanges();
                 return Task.FromResult(true);
@@ -64,40 +66,64 @@ namespace BlazorApp5.Servicos
             return lista;
         }
 
-        public Task<int> NumeroNotaFiscal()
+        public async Task <int> NumeroNotaFiscal()
         {
             int result = context.NotaFiscals.Count();
             result++;
-            return Task.FromResult(result);
+            return result;
         }
 
         public async Task<NotaFiscal> UpdateNF(Guid idNota, NotaFiscal nota)
         {
-            var nf = await context.NotaFiscals.FirstOrDefaultAsync(a => a.Id == idNota);
+            try
+            {
+                var nf = await context.NotaFiscals.FirstOrDefaultAsync(a => a.Id == idNota);
+                if (nf != null)
+                {
+                    nf.DataEmissao = nota.DataEmissao;
+                    nf.DataExercicio = nota.DataExercicio;
+                    nf.CodigoValidacao = nota.CodigoValidacao;
+                    nf.NumeroNF = nota.NumeroNF;
 
-            if (nf != null)
-            {
-                nf.DataEmissao = nota.DataEmissao;
-                nf.DataExercicio = nota.DataExercicio;
-                nf.DescricaoDoServico = nota.DescricaoDoServico;
-                nf.CodigoValidacao = nota.CodigoValidacao;
-                nf.AliquotaIss = nota.AliquotaIss;
-                nf.ValorIss = nota.ValorIss;
-                nf.Desconto = nota.Desconto;
-                nf.VecimentoIss = nota.VecimentoIss;
-                nf.ValorTotal = nota.ValorTotal;
-                nf.NumeroNF = nota.NumeroNF;
-                nf.NomeFornecedor = nota.NomeFornecedor;
-                nf.NomeCliente = nota.NomeCliente;
-                nf.FornecedorId = nota.FornecedorId;
-                nf.ClienteId = nota.ClienteId;
-                context.Update(nf);
-                context.SaveChanges();
-                return nf;
+                    nf.DescricaoDoServico = nota.DescricaoDoServico;
+                    
+                    nf.NomeFornecedor = nota.NomeFornecedor;
+                    nf.NomeCliente = nota.NomeCliente;
+                    nf.FornecedorId = nota.FornecedorId;
+                    nf.ClienteId = nota.ClienteId;
+
+                    nf.AliquotaIss = nota.AliquotaIss;
+                    nf.ValorIss = nota.ValorIss;
+                    nf.Desconto = nota.Desconto;
+                    nf.VecimentoIss = nota.VecimentoIss;
+                    nf.ValorTotal = nota.ValorTotal;
+                    nf.urlQrCode = nota.urlQrCode;
+                    nf.QrCodeImage = GerarQRCode(nota.urlQrCode);
+
+                    context.Update(nf);
+                    context.SaveChanges();
+                    return nf;
+                }
+                else
+                {
+                    return null;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return null;
+                throw ex;
+            }
+        }
+
+
+        private byte[] GerarQRCode(string texto)
+        {
+            QRCodeGenerator qrGerador = new QRCoder.QRCodeGenerator();
+            QRCodeData qrCodeData = qrGerador.CreateQrCode(texto, QRCodeGenerator.ECCLevel.Q);
+            using (PngByteQRCode qRCode1 = new PngByteQRCode(qrCodeData))
+            {
+                byte[] qrCodeImage = qRCode1.GetGraphic(20);
+                return qrCodeImage;
             }
         }
     }

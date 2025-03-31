@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlazorApp5.Migrations
 {
     [DbContext(typeof(AppDataContext))]
-    [Migration("20250120142037_inicio")]
+    [Migration("20250330211317_inicio")]
     partial class inicio
     {
         /// <inheritdoc />
@@ -99,42 +99,54 @@ namespace BlazorApp5.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Bairro")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CEP")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CNPJ_CPF")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Cidade")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Endereco")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Estado")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Inscricao_Municipal")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Inscricao_estadual")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NomeFantasia")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Numero")
+                    b.Property<int>("Numero")
                         .HasColumnType("int");
 
                     b.Property<string>("RasaoSocial")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Telefone")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -151,13 +163,14 @@ namespace BlazorApp5.Migrations
                     b.Property<decimal>("AliquotaIss")
                         .HasColumnType("decimal(10,2)");
 
-                    b.Property<Guid?>("ClienteId")
+                    b.Property<Guid>("ClienteId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CodigoValidacao")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("DataEmissao")
+                    b.Property<DateTime>("DataEmissao")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DataExercicio")
@@ -167,20 +180,29 @@ namespace BlazorApp5.Migrations
                         .HasColumnType("decimal(10,2)");
 
                     b.Property<string>("DescricaoDoServico")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("FornecedorId")
+                    b.Property<Guid>("FornecedorId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Numero")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnOrder(1);
+                    b.Property<string>("NomeCliente")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Numero"));
+                    b.Property<string>("NomeFornecedor")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Numero")
+                        .HasColumnType("int");
 
                     b.Property<string>("NumeroNF")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("QrCodeImage")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<decimal>("ValorIss")
                         .HasColumnType("decimal(10,2)");
@@ -188,28 +210,15 @@ namespace BlazorApp5.Migrations
                     b.Property<decimal>("ValorTotal")
                         .HasColumnType("decimal(10,2)");
 
+                    b.Property<DateTime?>("VecimentoIss")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("urlQrCode")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("ClienteId");
-
-                    b.HasIndex("FornecedorId");
-
                     b.ToTable("NotaFiscals");
-                });
-
-            modelBuilder.Entity("BlazorApp5.Classes.NotaFiscal", b =>
-                {
-                    b.HasOne("BlazorApp5.Classes.Cliente", "Cliente")
-                        .WithMany()
-                        .HasForeignKey("ClienteId");
-
-                    b.HasOne("BlazorApp5.Classes.Fornecedor", "Fornecedor")
-                        .WithMany()
-                        .HasForeignKey("FornecedorId");
-
-                    b.Navigation("Cliente");
-
-                    b.Navigation("Fornecedor");
                 });
 #pragma warning restore 612, 618
         }

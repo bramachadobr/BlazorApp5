@@ -5,10 +5,13 @@ namespace BlazorApp5.Classes
 {
     public class NotaFiscal
     {
+        [Key]
         public Guid Id { get; set; }
 
-        [Column(Order = 1)]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public string? urlQrCode { get; set; }
+
+        public byte[]? QrCodeImage { get; set; }
+
         public int Numero { get; set; }
         [Required]
         public string? NumeroNF { get; set; }
@@ -31,12 +34,12 @@ namespace BlazorApp5.Classes
         [Required]
         [Column(TypeName = "decimal(10,2)")]
         public decimal Desconto { get; set; }
+        [Required]
         [Column(TypeName = "decimal(10,2)")]
         public decimal ValorIss { get; set; }
         [Required]
         [Column(TypeName = "decimal(10,2)")]
         public decimal AliquotaIss { get; set; }
-        [Required]
         public DateTime? DataExercicio { get; set; }
         public DateTime? VecimentoIss { get; set; }
     }

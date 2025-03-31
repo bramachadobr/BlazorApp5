@@ -53,19 +53,19 @@ namespace BlazorApp5.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RasaoSocial = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NomeFantasia = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CNPJ_CPF = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Inscricao_estadual = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Inscricao_Municipal = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Endereco = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Bairro = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Numero = table.Column<int>(type: "int", nullable: true),
-                    CEP = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Cidade = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Estado = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Telefone = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    RasaoSocial = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NomeFantasia = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CNPJ_CPF = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Inscricao_estadual = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Inscricao_Municipal = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Endereco = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Bairro = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Numero = table.Column<int>(type: "int", nullable: false),
+                    CEP = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Cidade = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Estado = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Telefone = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -76,45 +76,29 @@ namespace BlazorApp5.Migrations
                 name: "NotaFiscals",
                 columns: table => new
                 {
-                    Numero = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    NumeroNF = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DataEmissao = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    CodigoValidacao = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FornecedorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    ClienteId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    DescricaoDoServico = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    urlQrCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    QrCodeImage = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    Numero = table.Column<int>(type: "int", nullable: false),
+                    NumeroNF = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DataEmissao = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CodigoValidacao = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FornecedorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    NomeFornecedor = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ClienteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    NomeCliente = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DescricaoDoServico = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ValorTotal = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     Desconto = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     ValorIss = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     AliquotaIss = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
-                    DataExercicio = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    DataExercicio = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    VecimentoIss = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_NotaFiscals", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_NotaFiscals_Clientes_ClienteId",
-                        column: x => x.ClienteId,
-                        principalTable: "Clientes",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_NotaFiscals_Fornecedore_FornecedorId",
-                        column: x => x.FornecedorId,
-                        principalTable: "Fornecedore",
-                        principalColumn: "Id");
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_NotaFiscals_ClienteId",
-                table: "NotaFiscals",
-                column: "ClienteId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_NotaFiscals_FornecedorId",
-                table: "NotaFiscals",
-                column: "FornecedorId");
         }
 
         /// <inheritdoc />
@@ -124,13 +108,13 @@ namespace BlazorApp5.Migrations
                 name: "Cidades");
 
             migrationBuilder.DropTable(
-                name: "NotaFiscals");
-
-            migrationBuilder.DropTable(
                 name: "Clientes");
 
             migrationBuilder.DropTable(
                 name: "Fornecedore");
+
+            migrationBuilder.DropTable(
+                name: "NotaFiscals");
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿@page "/notafiscal/{idNota}"
 @page "/notafiscal"
 
+
+
 @rendermode InteractiveServer
 
 @inject INFService notaServices
@@ -27,6 +29,18 @@
     <EditForm Model="notaFiscal" OnValidSubmit="Salvar">
         <DataAnnotationsValidator/>
         <ValidationSummary/>
+        <div class="row">
+            <div class="col-sm">
+                <label for="startDate" class="form-label">URL</label>
+                <input id="startDate" class="form-control" type="text" @bind-value="@notaFiscal.urlQrCode" placeholder="URL da imagem" aria-label="Url da imagem" />
+            </div>
+
+            <div class="col-sm">
+                <label for="startDate" class="form-label">QRCodeByte</label>
+                <img src="@ConverterParaBase64(notaFiscal.QrCodeImage)" width="200" />
+            </div>
+            
+        </div>
         <div class="row">
             <div class="col-sm">
                 <label for="startDate" class="form-label">Data da Emissão</label>
@@ -172,9 +186,10 @@
         notaFiscal = new NotaFiscal();
         notaFiscal.DataEmissao = DateTime.Today;
         notaFiscal.CodigoValidacao =  Guid.NewGuid().ToString().Substring(0,8);
-        notaFiscal.NumeroNF = DateTime.Today.Year.ToString() +  notaFiscal.Numero.ToString("D8");
+        notaFiscal.NumeroNF = DateTime.Today.Year.ToString() + notaServices.NumeroNotaFiscal().ToString();
         notaFiscal.AliquotaIss = decimal.Parse("2", System.Globalization.CultureInfo.InvariantCulture);
         notaFiscal.DataExercicio = DateTime.Now;
+        notaFiscal.VecimentoIss = DateTime.Now.AddDays(30);
     }
 
     public async Task Salvar()
@@ -206,8 +221,13 @@
         }
     }
 
-    private void Limpa()
+    private string ConverterParaBase64(byte[] imagem)
     {
-        
+        if (imagem == null || imagem.Length == 0) return string.Empty;
+        var base64 = Convert.ToBase64String(imagem);
+        return $"data:image/png;base64,{base64}";
     }
+
+
+
 }

@@ -1,0 +1,213 @@
+﻿@page "/notaFiscalPDF"
+
+
+@using BlazorApp5.Components.Layout
+@layout AlterLayout
+
+@rendermode InteractiveServer
+@attribute [StreamRendering]
+
+<div class="row" style="border: 2px solid black" >
+    <div class="col-sm-3" style="border-right: 2px solid black; padding: 10px; text-align:center">
+        <div>
+            <img src="/logo_nfsd.png" height="50px" />
+        </div>
+        <div>
+            <p style="font-size: 11px; margin-bottom:5px">
+                Consulte autenticidade via QR Code.
+            </p>
+        </div>
+    </div>
+
+    <div class="col-sm-6" style="border-right: 2px solid black; padding: 10px; text-align:center">
+        <div>
+            <img src="/logo_prefeitura.png" height="100" style="margin-bottom: 10px;" />
+        </div>
+        <div>
+            <p style="font-size: 14px; font-weight:bold; margin-bottom: 0px">PREFEITURA MUNICIPAL DE PARAUAPEBAS - PA</p>
+            <p style="font-size: 14px; margin-bottom: 5px ">SECRETARIA MUNICIPAL DE FAZENDA - SEFAZ</p>
+            <p style="font-size: 14px; font-weight:bold; margin-bottom: 0px; padding: 0px ">NOTA FISCAL DE SERVIÇOS DIGITAL - NFSD</p>
+        </div>        
+    </div>
+   
+    <div class="col-sm-3" >
+        <div class="row" style="border-bottom: 2px solid black;">
+            <div style="padding-left: 2px">
+                <p style="font-size: 12px; text-align: left; padding: 0px">Número da Nota</p>
+            </div>
+            <div style="text-align: right">
+                <h6 style="text-align: end ">202400000000088</h6>
+            </div>
+        </div>
+        <div class="row" style="border-bottom: 2px solid black;">
+            <div style="padding-left: 2px">
+                <p style="font-size: 12px; text-align: left; padding: 0px">Data e Hora</p>
+            </div>
+            <div style="text-align: right">
+                <h6 style="text-align: end">18/10/2022 15:30:21</h6>
+            </div>
+        </div>
+        <div class="row" style="padding: 1px;">
+            <div style="padding-left: 2px">
+                <p style="font-size: 12px; text-align: left; padding: 0px">Código de Verificação</p>
+            </div>
+            <div style="text-align: right">
+                <h6 style="text-align: end ">0914537e0</h6>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="row" style=" border-left: 2px solid #000; border-right: 2px solid #000; border-bottom: 2px solid #000;">
+    <div style="text-align:center; font-size: 16px; font-weight:bold">PRESTADOR DE SERVIÇOS</div>
+    <div style="font-size:14px; margin-left: 40px" >
+        <div>Nome/Razão Social: EDUNORTE EDUCACAO E SERVICOS LTDA</div>
+        <div>CPF/CNPJ: 38.636.610/0001-59 Domicílio Tributário Digital: opcaomaraba.fiscal@hotmail.com</div>
+        <div>Município: PARAUAPEBAS UF: PA Inscrição Municipal: 37417</div>
+        <div>Endereço: Avenida Sol Poente Quadra:050;lote:148/152 Nº 152 Bairro: Da Paz - CEP: 68515-000</div>
+        <p></p>
+    </div>    
+</div>
+<div class="row" style=" border-left: 2px solid #000; border-right: 2px solid #000; border-bottom: 2px solid #000;">
+    <div style="text-align:center; font-size: 16px; font-weight:bold">TOMADOR DE SERVIÇO</div>    
+    <div style="font-size:14px; margin-left: 40px">
+        <div>Nome/Razão Social: EDITORA E DISTRIBUIDORA EDUCACIONAL S/A</div>
+        <div>CPF/CNPJ: 38.733.648/0027-89 E-mail: agenciamachado@gmail.com</div>
+        <div>Município: LONDRINA UF: PR</div>
+        <div>Endereço: Rua R Tiete Nº 1208 Bairro: Loteamento Res. Vila Nova - CEP: 86025-230</div>
+        <p></p>
+    </div>
+</div>
+<div class="row" style=" border-left: 2px solid #000; border-right: 2px solid #000; border-bottom: 2px solid #000;">
+    <div style="text-align:center; font-size: 16px; font-weight:bold">
+        DISCRIMINAÇÃO DOS SERVIÇOS
+    </div>
+    <div>
+        <p style="font-size:14px; margin: 10px">SERVICOS PRESTADOS AO SISTEMA DE ENSINO PRESENCIAL CONECTADO NO PERIODO DE 09/09/2022 a 10/10/2022</p>
+    </div>
+    <div class="row">
+        <br />
+        <br />
+        <br />
+    </div>
+    
+</div>
+<div class="row" style=" border-left: 2px solid #000; border-right: 2px solid #000; border-bottom: 2px solid #000;">
+    <div style="text-align:center; font-size: 20px; font-weight:bold">
+        VALOR DA NOTA:R$ 491.417,61
+    </div>
+</div>
+<div class="row" style=" border-left: 2px solid #000; border-right: 2px solid #000; border-bottom: 2px solid #000;">
+    <p style="font-size:12px; margin-bottom: 0px">CNAE: 8532-5/00</p>
+    <p style="font-size:12px; margin-bottom: 0px">Educação superior - graduação e pós-graduação</p>
+    <p></p>
+</div>
+
+<div class="row" style=" border-left: 2px solid #000; border-right: 2px solid #000; border-bottom: 2px solid #000;">
+        <div class="col-sm" style="border-right: 2px solid black;">
+            <div class="row" style="border-bottom:2px solid black; ">
+            <p style="font-size:12px; text-align:center; margin-bottom:2px; padding:0px">PIS (0.0%)</p>
+                <p style="font-size:16px; text-align:right; margin-bottom:2px;">R$ 00,00</p>
+            </div>
+            <div class="row" >
+            <p style="font-size:12px; text-align:center; margin-bottom:2px; padding:0px">Deduções</p>
+            <p style="font-size:16px; text-align:right; margin-bottom:2px;">R$ 00,00</p>
+            </div>
+        </div>
+        
+         <div class="col-sm" style="border-right: 2px solid black;">
+            <div class="row" style="border-bottom:2px solid black; ">
+            <p style="font-size:12px; text-align:center; margin-bottom:2px; padding:0px">COFINS (0.0%)</p>
+            <p style="font-size:16px; text-align:right; margin-bottom:2px;">R$ 00,00</p>
+            </div>
+            <div class="row" >
+            <p style="font-size:12px; text-align:center; margin-bottom:2px; padding:0px">Desconto Incondicionado</p>
+            <p style="font-size:16px; text-align:right; margin-bottom:2px;">R$ 00,00</p>
+            </div>
+        </div>
+
+    <div class="col-sm" style="border-right: 2px solid black;">
+        <div class="row" style="border-bottom: 2px solid black; ">
+            <p style="font-size:12px; text-align:center; margin-bottom:2px; padding:0px">INSS (0.0%)</p>
+            <p style="font-size:16px; text-align:right; margin-bottom:2px;">R$ 00,00</p>
+        </div>
+        <div class="row" >
+            <p style="font-size:12px; text-align:center; margin-bottom:2px; padding:0px">Base cálculo</p>
+            <p style="font-size:16px; text-align:right; margin-bottom:2px;">R$ 00,00</p>
+        </div>
+    </div>
+
+     <div class="col-sm" style="border-right: 2px solid black;">
+            <div class="row" style="border-bottom: 2px solid black; ">
+            <p style="font-size:12px; text-align:center; margin-bottom:2px;padding:0px">IR (0.0%)</p>
+            <p style="font-size:16px; text-align:right; margin-bottom:2px;">R$ 00,00</p>
+            </div>
+            <div class="row" >
+            <p style="font-size:12px; text-align:center; margin-bottom:2px; padding:0px">Alíquota (%)</p>
+            <p style="font-size:16px; text-align:right; margin-bottom:2px;">R$ 00,00</p>
+            </div>
+        </div>
+
+    <div class="col-sm" >
+        <div class="row" style="border-bottom: 2px solid black; ">
+            <p style="font-size:12px; text-align:center; margin-bottom:2px; padding:0px">CSLL (0.0%)</p>
+            <p style="font-size:16px; text-align:right; margin-bottom:2px;">R$ 00,00</p>
+        </div>
+        <div class="row">
+            <p style="font-size:12px; text-align:center; margin-bottom:2px; padding:0px">Valor do ISS</p>
+            <p style="font-size:16px; text-align:right; margin-bottom:2px;">R$ 00,00</p>
+        </div>
+    </div>
+
+</div>
+
+<div class="row" style=" border-left: 2px solid #000; border-right: 2px solid #000; border-bottom: 2px solid #000;">
+    <div class="row">
+        <div style="text-align:center; font-size: 16px; font-weight:bold">
+            Outras Informacoes
+        </div>
+    </div>
+    <div class="col-sm">
+        <p style="font-size:14px; text-align:left; margin-bottom:2px;">
+            Data de vencimento do ISS desta NFSd: 10/11/2022
+        </p>
+        <p style="font-size:14px; text-align:left; margin-bottom:2px;">
+            Nota fiscal referente ao Mês: 10/2022
+        </p>
+        <p style="font-size:14px; text-align:left; margin-bottom:2px;">
+            Regime de tributação: Simples Nacional
+        </p>
+        <p style="font-size:14px; text-align:left; margin-bottom:2px;">
+            Esta NFSd foi emitida com base no Art. 150 da Lei n° 023/2020.
+        </p>
+        <p style="font-size:14px; text-align:left; margin-bottom:2px;">
+            Serviço: 08.01 - Ensino regular pré escolar, fundamental, médio e superior.
+        </p>
+    </div>
+    <div class="col-sm">
+        <p style="font-size:14px; text-align:left; margin-bottom:2px;">
+            Local da prestação do serviço: LONDRINA - PR
+        </p>
+        <p style="font-size:14px; text-align:left; margin-bottom:2px;">
+            Situação Tributária: Tributável
+        </p>
+        <p style="font-size:14px; text-align:left; margin-bottom:2px;">
+            Tipo recolhimento: ISS PRÓPRIO    
+        </p>
+        <p style="font-size:14px; text-align:left; margin-bottom:2px;">
+            Responsável: ISS A RECOLHER PELO PRESTADOR
+        </p>
+        <p style="font-size:14px; text-align:left; margin-bottom:2px;">
+            Tributação do serviço: TRIBUTÁVEL NO MUNICÍPIO
+        </p>
+    </div>
+    <div class="row">
+        <br />
+        <br />
+    </div>
+</div>
+
+
+@code {
+
+}

@@ -17,7 +17,10 @@ namespace BlazorApp5
             builder.Services.AddBlazorBootstrap();
 
             builder.Services.AddDbContext<AppDataContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlExpressConnectionString3")));
-            
+            //SqlExpressConnectionString3
+            //SqlExpressConnectionStringDocker
+
+
             builder.Services.AddScoped<INFService, NFService>();
             builder.Services.AddScoped<IFornecedorService, FornecedorService>();
             builder.Services.AddScoped<IClienteService, ClienteService>();

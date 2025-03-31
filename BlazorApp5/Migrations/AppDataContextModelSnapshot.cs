@@ -170,7 +170,7 @@ namespace BlazorApp5.Migrations
                     b.Property<DateTime>("DataEmissao")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("DataExercicio")
+                    b.Property<DateTime?>("DataExercicio")
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("Desconto")
@@ -192,15 +192,14 @@ namespace BlazorApp5.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Numero")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnOrder(1);
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Numero"));
+                        .HasColumnType("int");
 
                     b.Property<string>("NumeroNF")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("QrCodeImage")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<decimal>("ValorIss")
                         .HasColumnType("decimal(10,2)");
@@ -210,6 +209,9 @@ namespace BlazorApp5.Migrations
 
                     b.Property<DateTime?>("VecimentoIss")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("urlQrCode")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
