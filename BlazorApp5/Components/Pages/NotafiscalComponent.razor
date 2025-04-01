@@ -92,15 +92,15 @@
         <div class="row">
             <div class="col-sm">
                 <label for="valorNota" class="form-label">R$ Valor Total da NF</label>
-                <input id="valorNota" class="form-control" type="number" @bind-value="@notaFiscal.ValorTotal" placeholder="Valor Total" aria-label="Valor Total" />
+                <input id="valorNota" class="form-control" step=".01" type="number" @bind-value="@notaFiscal.ValorTotal" placeholder="Valor Total" aria-label="Valor Total" />
             </div>
             <div class="col-sm">
                 <label for="aliquotaIss" class="form-label">% ISS</label>
-                <input id="aliquotaIss" class="form-control" type="number" @bind-value="@notaFiscal.AliquotaIss" placeholder="% ISS" aria-label="Aliquota ISS" />
+                <input id="aliquotaIss" class="form-control" step=".01" type="number" @bind-value="@notaFiscal.AliquotaIss" placeholder="% ISS" aria-label="Aliquota ISS" />
             </div>
             <div class="col-sm">
                 <label for="valorIss" class="form-label">R$ ISS</label>
-                <input id="valorIss" class="form-control" type="number" @bind-value="@notaFiscal.ValorIss" placeholder="Valor ISS" aria-label="Valor ISS" />
+                <input id="valorIss" class="form-control" step=".01" type="number" @bind-value="@notaFiscal.ValorIss" placeholder="Valor ISS" aria-label="Valor ISS" />
             </div>
         </div>
 
@@ -139,6 +139,8 @@
 
     public string? cnpjUrl = null;
 
+    public int numeroCountNota = 0;
+
     protected override async Task OnParametersSetAsync()
     {
         try
@@ -166,6 +168,7 @@
     {
         Guid guid = this.notaFiscal.FornecedorId;
         notaFiscal.NomeFornecedor = listaFornecedores.FirstOrDefault(a => a.Id == guid).RasaoSocial;
+
     }
 
     protected override async Task OnInitializedAsync()
@@ -186,10 +189,15 @@
 
     private void IniciaNotaFiscal()
     {
+        if (numeroCountNota == 0)
+        {
+            numeroCountNota = notaServices.NumeroNotaFiscal();
+        }
+        
         notaFiscal = new NotaFiscal();
         notaFiscal.DataEmissao = DateTime.Now;
         notaFiscal.CodigoValidacao =  Guid.NewGuid().ToString().Substring(0,8);
-        notaFiscal.NumeroNF = DateTime.Today.Year.ToString() + notaServices.NumeroNotaFiscal().ToString();
+        notaFiscal.NumeroNF = $"{DateTime.Today.Year.ToString()}00000{numeroCountNota.ToString()}";
         notaFiscal.AliquotaIss = decimal.Parse("2", System.Globalization.CultureInfo.InvariantCulture);
         notaFiscal.DataExercicio = DateTime.Now;
         notaFiscal.VecimentoIss = DateTime.Now.AddDays(30);

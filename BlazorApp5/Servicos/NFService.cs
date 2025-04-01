@@ -66,7 +66,7 @@ namespace BlazorApp5.Servicos
             return lista;
         }
 
-        public async Task <int> NumeroNotaFiscal()
+        public int NumeroNotaFiscal()
         {
             int result = context.NotaFiscals.Count();
             result++;

@@ -10,6 +10,6 @@ namespace BlazorApp5.Servicos
         public Task<NotaFiscal> UpdateNF(Guid idNota, NotaFiscal nota);
         public Task<IEnumerable<NotaFiscal>> GetNotasFicasis();
         public Task<NotaFiscal> GetNotaFiscalById(Guid id);
-        public Task<int> NumeroNotaFiscal();
+        public int NumeroNotaFiscal();
     }
 }
