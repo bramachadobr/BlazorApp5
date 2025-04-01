@@ -137,6 +137,8 @@
 
     public string? MensagemError { get; set; } = null;
 
+    public string? cnpjUrl = null;
+
     protected override async Task OnParametersSetAsync()
     {
         try
@@ -157,6 +159,7 @@
     {
         Guid guid = this.notaFiscal.ClienteId;
         notaFiscal.NomeCliente = listaClientes.FirstOrDefault(a => a.Id == guid).RasaoSocial;
+        cnpjUrl = listaClientes.FirstOrDefault(a => a.Id == guid).CNPJ_CPF.ToString();
     }
 
     public void SelectFornecedor()
@@ -184,7 +187,7 @@
     private void IniciaNotaFiscal()
     {
         notaFiscal = new NotaFiscal();
-        notaFiscal.DataEmissao = DateTime.Today;
+        notaFiscal.DataEmissao = DateTime.Now;
         notaFiscal.CodigoValidacao =  Guid.NewGuid().ToString().Substring(0,8);
         notaFiscal.NumeroNF = DateTime.Today.Year.ToString() + notaServices.NumeroNotaFiscal().ToString();
         notaFiscal.AliquotaIss = decimal.Parse("2", System.Globalization.CultureInfo.InvariantCulture);
@@ -202,6 +205,8 @@
 
         var listaNotas = await notaServices.GetNotasFicasis();
         var nota = listaNotas.FirstOrDefault(a => a.Id == Guid.Parse(idNota));
+
+        notaFiscal.urlQrCode = GerarUrl();
 
         if (nota == null)
         {
@@ -228,6 +233,11 @@
         return $"data:image/png;base64,{base64}";
     }
 
+    private string GerarUrl()
+    {
+        string url = $"https://parauapebas.co/nfsd/pages/consulta/notaFiscal/consultarAutenticidadeNotaFiscal.html?cnpj={cnpjUrl}&nota={notaFiscal.NumeroNF.ToString()}&codigo={notaFiscal.CodigoValidacao.ToString()}";
+        return url;
+    }
 
 
 }

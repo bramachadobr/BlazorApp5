@@ -42,7 +42,7 @@ else
                     @foreach (var nf in listaNota)
                     {
                         <tr>
-                            <td>@nf.Numero</td>
+                            <td>@nf.NumeroNF</td>
                             <td>@nf.DataEmissao</td>
                             <td>@nf.CodigoValidacao</td>
                             <td>@nf.NomeFornecedor</td>
@@ -51,6 +51,7 @@ else
                             <td>
                                 <button id="edit" class="btn btn-sm btn-primary" @onclick="()=>EditItem(nf.Id)"><i class="bi bi-pencil-fill"></i></button>
                                 <button id="delete" class="btn btn-sm btn-danger" @onclick="()=> ShowConfirmationAsync(nf.Id)"><i class="bi bi-trash3-fill"></i></button>
+                                <button id="print" class="btn btn-sm btn-info" @onclick="()=> ShowPrintPdf(nf.Id)"><i class="bi bi-printer-fill"></i></button>
                             </td>
                         </tr>
                     }
@@ -79,6 +80,11 @@ else
             await notaService.DeleteNFbyId(id);
             Navigation.Refresh();
         }
+    }
+
+    private async Task ShowPrintPdf(Guid id)
+    {
+        Navigation.NavigateTo($"/notaFiscalPDF/{id.ToString()}", true);
     }
 
     private IEnumerable<NotaFiscal>? listaNota = null;
