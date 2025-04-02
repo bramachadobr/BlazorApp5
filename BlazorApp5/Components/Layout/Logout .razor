@@ -1,0 +1,20 @@
+﻿@inject CustomAuthenticationStateProvider AuthProvider
+@inject NavigationManager Navigation
+
+<AuthorizeView>
+    <Authorized>
+        <p>Olá, @context.User.Identity.Name!</p>
+        <button @onclick="Logout">Sair</button>
+    </Authorized>
+    <NotAuthorized>
+        <a href="/login">Login</a>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    private void Logout()
+    {
+        AuthProvider.Logout();
+        Navigation.NavigateTo("/");
+    }
+}

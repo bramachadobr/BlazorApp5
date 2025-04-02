@@ -1,0 +1,18 @@
+﻿@page "/login"
+@inject CustomAuthenticationStateProvider AuthProvider
+@inject NavigationManager Navigation
+
+<h3>Login</h3>
+
+<input @bind="username" placeholder="Usuário" />
+<button @onclick="HandleLogin">Entrar</button>
+
+@code {
+    private string username;
+
+    private void HandleLogin()
+    {
+        AuthProvider.Login(username);
+        Navigation.NavigateTo("/");
+    }
+}

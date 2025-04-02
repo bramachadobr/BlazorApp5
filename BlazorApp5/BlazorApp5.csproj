@@ -11,6 +11,8 @@
   <ItemGroup>
     <PackageReference Include="Blazor.Bootstrap" Version="3.1.0" />
     <PackageReference Include="BootstrapBlazor" Version="9.2.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.14" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.14" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.1">
       <PrivateAssets>all</PrivateAssets>
@@ -27,6 +29,12 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Components\Pages\Authentication.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
   </ItemGroup>
 
 </Project>
