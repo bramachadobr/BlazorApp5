@@ -82,7 +82,7 @@
             <div style="text-align:center; font-size: 15px; font-weight:bold">PRESTADOR DE SERVIÇOS</div>
             <div style="font-size:12px; margin-left: 40px">
                 <div>Nome/Razão Social: <span style="font-weight:bold">@currentCliente.RasaoSocial.ToString()</span></div>
-                <div>CPF/CNPJ: <span style="font-weight:bold">@Regex.Replace(@currentCliente.CNPJ_CPF.ToString(), @"(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})", "$1.$2.$3/$4-$5")</span> Domicílio Tributário Digital: <span style="font-weight:bold"> @currentCliente.Email.ToString()</span></div>
+                <div>CPF/CNPJ: <span style="font-weight:bold">@Regex.Replace(@currentCliente.CNPJ_CPF.ToString(), @"(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})", "$1.$2.$3/$4-$5") </span> Domicílio Tributário Digital: <span style="font-weight:bold"> @currentCliente.Email.ToString()</span></div>
                 <div>Município: <span style="font-weight:bold">@currentCliente.Cidade.ToString()</span> UF: <span style="font-weight:bold"> @currentCliente.Estado.ToString()</span> Inscrição Municipal: <span style="font-weight:bold">@currentCliente.Inscricao_Municipal.ToString()</span></div>
                 <div>Endereço: <span style="font-weight:bold"> @currentCliente.Endereco.ToString() Nº @currentCliente.Numero.ToString() Bairro: @currentCliente.Bairro.ToString() - CEP: @currentCliente.CEP.ToString()</span></div>
                 <p></p>
@@ -103,7 +103,7 @@
                 DISCRIMINAÇÃO DOS SERVIÇOS
             </div>
             <div>
-                <div style="font-size:12px; margin: 10px ; margin-top:-60px">@currentNF.DescricaoDoServico.ToString()</div>
+                <div style="font-size:12px; margin: 10px ; margin-top:-40px">@currentNF.DescricaoDoServico.ToString()</div>
             </div>
             <div class="row">
                 <br />
@@ -113,7 +113,7 @@
         </div>
         <div class="row" style=" border-left: 2px solid #000; border-right: 2px solid #000; border-bottom: 2px solid #000;">
             <div style="text-align:center; font-size: 18px; font-weight:bold">
-                VALOR DA NOTA:R$ @currentNF.ValorTotal.ToString()
+                VALOR DA NOTA: @currentNF.ValorTotal.ToString("C", new System.Globalization.CultureInfo("pt-BR"))
             </div>
         </div>
         <div class="row" style=" border-left: 2px solid #000; border-right: 2px solid #000; border-bottom: 2px solid #000;">
@@ -154,7 +154,7 @@
                 </div>
                 <div class="row">
                     <p style="font-size:10px; text-align:center; margin-bottom:2px; padding:0px">Base cálculo</p>
-                    <p style="font-size:14px; text-align:right; margin-bottom:2px;">R$ 00,00</p>
+                    <p style="font-size:14px; text-align:right; margin-bottom:2px;"> @currentNF.ValorTotal.ToString("C", new System.Globalization.CultureInfo("pt-BR"))</p>
                 </div>
             </div>
 
@@ -165,7 +165,7 @@
                 </div>
                 <div class="row">
                     <p style="font-size:10px; text-align:center; margin-bottom:2px; padding:0px">Alíquota (%)</p>
-                        <p style="font-size:14px; text-align:right; margin-bottom:2px;">@currentNF.AliquotaIss.ToString() </p>
+                        <p style="font-size:14px; text-align:right; margin-bottom:2px;">@currentNF.AliquotaIss.ToString()</p>
                 </div>
             </div>
 
@@ -176,20 +176,20 @@
                 </div>
                 <div class="row">
                     <p style="font-size:10px; text-align:center; margin-bottom:2px; padding:0px">Valor do ISS</p>
-                    <p style="font-size:14px; text-align:right; margin-bottom:2px;">R$ @currentNF.ValorIss.ToString()</p>
+                    <p style="font-size:14px; text-align:right; margin-bottom:2px;"> @currentNF.ValorIss.ToString("C", new System.Globalization.CultureInfo("pt-BR"))</p>
                 </div>
             </div>
-
         </div>
 
         <div class="row" style=" border-left: 2px solid #000; border-right: 2px solid #000; border-bottom: 2px solid #000;">
-            <p style="font-size:12px; margin-bottom: 0px">VALOR LIQUIDO R$ @currentNF.ValorTotal.ToString()</p>
+            <p style="font-size:12px; margin-bottom: 0px">VALOR LIQUIDO  @currentNF.ValorTotal.ToString("C", new System.Globalization.CultureInfo("pt-BR"))</p>
+            
         </div>
 
         <div class="row" style=" border-left: 2px solid #000; border-right: 2px solid #000; border-bottom: 2px solid #000;">
             <div class="row">
                 <div style="text-align:center; font-size: 14px; font-weight:bold">
-                    Outras Informacoes
+                    Outras Informações
                 </div>
             </div>
             <div class="col-sm">

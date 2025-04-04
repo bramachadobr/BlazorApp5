@@ -11,5 +11,14 @@ namespace BlazorApp5
         public DbSet<Fornecedor> Fornecedore { get; set; }
         public DbSet<Cidade> Cidades { get; set; }
         public DbSet<NotaFiscal> NotaFiscals { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Usuario>().HasData(
+                    new Usuario { Id=Guid.NewGuid(), User = "Admin", Senha = "emissor", NomeCompleto = "Edivaldo Machado" }
+            );
+        }
+
+
     }
 }
