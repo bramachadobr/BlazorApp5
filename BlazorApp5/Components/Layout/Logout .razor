@@ -1,4 +1,5 @@
-﻿@inject CustomAuthenticationStateProvider AuthProvider
+﻿@inject CustomAuthenticationStateProvider AuthenticationStateProvider
+@inject CustomAuthStateProvider AuthProvider
 @inject NavigationManager Navigation
 
 <AuthorizeView>
@@ -12,9 +13,9 @@
 </AuthorizeView>
 
 @code {
-    private void Logout()
+    private async Task Logout()
     {
-        AuthProvider.Logout();
+        await AuthProvider.LogoutAsync();
         Navigation.NavigateTo("/");
     }
 }

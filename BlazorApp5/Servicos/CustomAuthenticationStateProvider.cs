@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Components.Authorization;
 public class CustomAuthenticationStateProvider : AuthenticationStateProvider
 {
     private ClaimsPrincipal _anonymous = new ClaimsPrincipal(new ClaimsIdentity());
-
     private ClaimsPrincipal _currentUser = null;
 
     public override Task<AuthenticationState> GetAuthenticationStateAsync()

@@ -1,18 +1,72 @@
 ﻿@page "/login"
-@inject CustomAuthenticationStateProvider AuthProvider
+@inject CustomAuthStateProvider AuthProvider
+@inject CustomAuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager Navigation
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+@rendermode InteractiveServer
+
 
 <h3>Login</h3>
 
-<input @bind="username" placeholder="Usuário" />
-<button @onclick="HandleLogin">Entrar</button>
+<div class="container">
+    <div class="row col-4  border" >
+        <div class="mb-3">
+            <label class="form-label">Usuario: </label>
+            <input class="form-control" @bind="usuario" placeholder="Usuário" />
+        </div> 
+        <div class="mb-3">
+            <label class="form-label">Senha: </label>
+            <input class="form-control" @bind="senha" type="password" placeholder="Senha" />
+        </div
+        <p>@logado</p>
+        <div>
+            <button class="btn btn-lg btn-primary" @onclick="@(()=>LoginUSuario())">Entrar</button>
+            <button class="btn btn-lg btn-primary" @onclick="@(()=>Limpa())">Limpar</button>
+        </div>
+        <p>  </p>
+    </div>
+</div>
+
+@* <button class="btn btn-sm btn-primary" @onclick="@(()=>LoginUSuario())">Entrar</button> *@
+
+
+
 
 @code {
-    private string username;
+    private string usuario;
+    private string senha;
 
-    private void HandleLogin()
+    private string logado = string.Empty;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        AuthProvider.Login(username);
-        Navigation.NavigateTo("/");
+        logado = await LocalStorage.GetItemAsync<string>("logado");
+    }
+
+
+
+    public async Task LoginUSuario()
+    {
+        if (usuario == "admin" && senha == "123")
+        {
+            await LocalStorage.SetItemAsync<string>("logado", "ok");
+            logado = await LocalStorage.GetItemAsync<string>("logado");
+            logado = "";
+            // AuthProvider.Login(usuario);
+            Navigation.NavigateTo("/notafiscallist");
+        }
+        else
+        { 
+            await LocalStorage.SetItemAsync("logado", "");
+            logado = "Usuário ou senha inválidos!";
+
+        }
+    }
+
+    private void Limpa()
+    {
+        usuario = "";
+        senha = "";
+        logado = "";
     }
 }

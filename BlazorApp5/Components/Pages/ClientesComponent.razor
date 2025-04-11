@@ -5,6 +5,7 @@
 @inject IClienteService clienteService
 @inject NavigationManager navigate
 @inject IJSRuntime jsRuntime
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 
 <PageTitle>Cliente</PageTitle>
 
@@ -126,6 +127,16 @@
             {
                 currentCliente = new();
             }
+        }
+    }
+
+    protected override async void OnAfterRender(bool firstRender)
+    {
+        var logado = await LocalStorage.GetItemAsync<string>("logado");
+
+        if (logado != "ok")
+        {
+            navigate.NavigateTo("login");
         }
     }
 

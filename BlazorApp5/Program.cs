@@ -1,5 +1,6 @@
 using BlazorApp5.Components;
 using BlazorApp5.Servicos;
+using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,16 +17,20 @@ namespace BlazorApp5
                 .AddInteractiveServerComponents();
 
             builder.Services.AddBlazorBootstrap();
+            builder.Services.AddBlazoredLocalStorage();
 
             builder.Services.AddDbContext<AppDataContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlExpressConnectionString3")));
             //SqlExpressConnectionString3
             //SqlExpressConnectionStringDocker
 
             builder.Services.AddAuthorizationCore();
+
+            builder.Services.AddScoped<CustomAuthStateProvider>();
+            builder.Services.AddScoped<BrowserStorageService>();
+            builder.Services.AddScoped<AuthenticationStateProvider>(provider => provider.GetRequiredService<CustomAuthStateProvider>());
+
+            builder.Services.AddScoped<CustomAuthenticationStateProvider>();
             builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
-            builder.Services.AddScoped<CustomAuthenticationStateProvider>(); // Para poder chamar login/logout
-
-
 
             builder.Services.AddScoped<INFService, NFService>();
             builder.Services.AddScoped<IFornecedorService, FornecedorService>();

@@ -4,6 +4,7 @@
 @inject INFService notaService
 @inject NavigationManager Navigation
 @inject IJSRuntime jsrunTime
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 
 <PageTitle>Weather</PageTitle>
 
@@ -89,8 +90,20 @@ else
 
     private IEnumerable<NotaFiscal>? listaNota = null;
 
+    protected override async void OnAfterRender(bool firstRender)
+    {
+        var logado =  await LocalStorage.GetItemAsync<string>("logado");
+
+        if (logado !="ok")
+        {
+            Navigation.NavigateTo("login");
+        }
+    }
+
     protected override async Task OnInitializedAsync()
     {
+
+
         if (listaNota == null)
         {
             this.listaNota = await notaService.GetNotasFicasis();

@@ -1,5 +1,8 @@
 ﻿@page "/"
 
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+@rendermode InteractiveServer
+
 <PageTitle>Home</PageTitle>
 
 
@@ -17,7 +20,14 @@
 <p>Desenvolvido em parceria com a PMP-Prefeitura Municipal de Parauapebas/PA</p>
 <div class="row">
     <div class="col-sm"><img src="/logo_nfsd.png" height="80px" /></div>
-    
+
 </div>
 
+@code
+{
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await LocalStorage.RemoveItemAsync("logado");
+    }
+}

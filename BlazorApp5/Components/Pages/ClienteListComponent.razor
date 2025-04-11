@@ -4,6 +4,7 @@
 @inject IClienteService clienteService
 @inject NavigationManager Navigation
 @inject IJSRuntime jsrunTime
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 
 
 <PageTitle>Clientes</PageTitle>
@@ -76,6 +77,17 @@ else
         if (confirmation)
         {
             await clienteService.Delete(id);
+        }
+    }
+
+
+    protected override async void OnAfterRender(bool firstRender)
+    {
+        var logado = await LocalStorage.GetItemAsync<string>("logado");
+
+        if (logado != "ok")
+        {
+            Navigation.NavigateTo("login");
         }
     }
 

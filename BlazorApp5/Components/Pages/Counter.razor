@@ -1,7 +1,10 @@
 ﻿@page "/counter"
+@using Microsoft.AspNetCore.Authorization
 @rendermode InteractiveServer
 
 @inject IJSRuntime jsRunTime
+
+@* @attribute [Authorize] *@
 
 <PageTitle>Counter</PageTitle>
 

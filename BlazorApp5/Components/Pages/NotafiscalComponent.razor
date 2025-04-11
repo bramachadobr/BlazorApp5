@@ -9,6 +9,8 @@
 @inject IJSRuntime jsRuntime
 @inject IClienteService clienteService
 @inject IFornecedorService fornecedorService
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+@inject NavigationManager Navigation
 
 <PageTitle>Nota Fiscal</PageTitle>
 
@@ -140,6 +142,16 @@
     public string? cnpjUrl = null;
 
     public int numeroCountNota = 0;
+
+    protected override async void OnAfterRender(bool firstRender)
+    {
+        var logado = await LocalStorage.GetItemAsync<string>("logado");
+
+        if (logado != "ok")
+        {
+            Navigation.NavigateTo("login");
+        }
+    }
 
     protected override async Task OnParametersSetAsync()
     {
